@@ -372,7 +372,21 @@ bool Radio::setupReceiver(void)
 
   tableValue = 0x80;
 
-  // Initialize first half of the gain table.
+  //_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+  // this table contains a mapping from 0-255 to
+  // 0x80-0x7f. This is needed to for mapping a gain
+  // index to a register setting for 2832U registes
+  // for min and max analog IF control line values
+  // that are used for its analog AGC. Presently,
+  // I set both registers to the same value, thus,
+  // keeping the 2832U AGC out of the way. This
+  // alows me to manually set the IF gain in the
+  // R82xx tuner.
+  // I think, ultimately, I'll use qn additional
+  // table that maps gain in decibels to gain
+  // index. Then, the gain index will be used to
+  // look up the register setting from this table.
+  //_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
   for (i = 0; i < 256; i++)
   {
     analogAgcTable[i] = tableValue++;
