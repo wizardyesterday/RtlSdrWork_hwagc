@@ -1393,7 +1393,40 @@ static int r82xx_gpio(struct r82xx_priv *priv, int enable)
 
 
 
+/**************************************************************************
 
+  Name: setupRingOscillator
+
+  Purpose: The purpose of this function is to configure and start up the
+  ring oscillator in an R82xx tuner device.
+
+  Calling Sequence: status = setupRingOscillator(priv,
+                                                 n_ring,
+                                                 out[utDivider,
+                                                 outputGain)
+
+  Inputs:
+
+    priv - A pointer to a structure that represents device state.
+
+    n_ring - The divider value for the ring oscillator phase locked
+    loop. Valid values are 0 through 15, although, it is reecommended
+    to use values between 9 and 14, inclusive.
+
+    outputDivider - A parameter that is used to divide the ring
+    oscillator VCO frequency down to a lower value.  Valid values
+    are {4,6,8,12,16,24,32,48}.
+
+    outputGain - A parameter that specifies the gain for which the
+    ring oscillator output is amplified.  Valid values are
+    {-5,0,3,8}.  The units are in decibels.
+
+  Outputs:
+
+    status - The status of the operation. A value of 0 implies success,
+    and a value of -1 implies failure.
+
+**************************************************************************/
 static int setupRingOscillator(struct r82xx_priv *priv,
                                uint8_t n_ring,
                                uint8_t outputDivider,
@@ -1406,6 +1439,12 @@ static int setupRingOscillator(struct r82xx_priv *priv,
   uint8_t gainBits;
   static const uint8_t divBit21[] = {0,0,1,1,2,2,3,3};
   static const uint8_t divBit0[] = {0,0x20,0,0x20,0,0x20,0,0x20};
+
+  if (n_ring > 15)
+  {
+    // Clip it.
+    n_ring = 15;
+  } // if
 
   switch (outputDivider)
   {
@@ -1459,6 +1498,7 @@ static int setupRingOscillator(struct r82xx_priv *priv,
 
     default:
     {
+      // Default to divide by 4.
       ring_div_index = 0;
       break;
     } // case
@@ -1493,6 +1533,7 @@ static int setupRingOscillator(struct r82xx_priv *priv,
 
     default:
     {
+      // Default to -5dB.
       gainBits = 0;
       break;
     } // case
