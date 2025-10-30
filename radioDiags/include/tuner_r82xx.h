@@ -119,4 +119,12 @@ int r82xx_set_if_gain(struct r82xx_priv *priv, uint8_t stage, int gain);
 int r82xx_set_bandwidth(struct r82xx_priv *priv, int bandwidth,  uint32_t rate);
 int r82xx_toggle_test(struct r82xx_priv *priv, int toggle);
 
+int r82xx_startRingOscillator(struct r82xx_priv *priv,
+                              uint8_t n_ring,
+                              uint8_t outputDivider,
+                              int outputGain,
+                              uint32_t *ringFrequencyPtr);
+
+int r82xx_stopRingOscillator(void);
+
 #endif

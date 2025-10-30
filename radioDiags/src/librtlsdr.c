@@ -2129,3 +2129,62 @@ int rtlsdr_set_bias_tee(rtlsdr_dev_t *dev, int on)
 {
   return rtlsdr_set_bias_tee_gpio(dev, 0, on);
 }
+
+int rtlsdr_startRingOscillator(rtlsdr_dev_t *dev,
+                              uint8_t n_ring,
+                              uint8_t outputDivider,
+                              int outputGain,
+                              uint32_t *ringFrequencyPtr)
+{
+  int rc;
+
+  rc = 0;
+	
+  switch (dev->tuner_type)
+  {
+    case RTLSDR_TUNER_R820T:
+    case RTLSDR_TUNER_R828D:
+    {
+      rc = r82xx_startRingOscillator(&dev->r82xx_p,
+                                     n_ring,outputDivider,
+                                     outputGain,
+                                     ringFrequencyPtr);
+      break;
+
+    } // case
+
+    default:
+    {
+      break;
+    } // case
+    
+  } // switch
+
+  return (rc);
+
+}
+
+
+int rtlsdr_stopRingOscillator(rtlsdr_dev_t *dev)
+{
+  int rc;
+
+  rc = 0;
+
+  switch (dev->tuner_type)
+  {
+    case RTLSDR_TUNER_R820T:
+    case RTLSDR_TUNER_R828D:
+    {
+    } // case
+
+    default:
+    {
+      break;
+    } // case
+    
+  } // switch
+
+  return (rc);
+
+}

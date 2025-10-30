@@ -415,6 +415,16 @@ RTLSDR_API int rtlsdr_demod_write_reg(rtlsdr_dev_t *dev,
     uint16_t val,
     uint8_t len);
 
+// Ring oscillator support.
+int rtlsdr_startRingOscillator(rtlsdr_dev_t *dev,
+                              uint8_t n_ring,
+                              uint8_t outputDivider,
+                              int outputGain,
+                              uint32_t *ringFrequencyPtr);
+
+
+int rtlsdr_stopRingOscillator(rtlsdr_dev_t *dev);
+
 #ifdef __cplusplus
 }
 #endif

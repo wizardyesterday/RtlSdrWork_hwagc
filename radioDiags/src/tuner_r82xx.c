@@ -234,11 +234,6 @@ static int r82xx_xtal_capacitor[][2] = {
 };
 
 
-static int setupRingOscillator(struct r82xx_priv *priv,
-                               uint8_t n_ring,
-                               uint8_t outputDivider,
-                               int outputGain);
-
 /*
  * I2C read/write code and shadow registers logic
  */
@@ -974,6 +969,7 @@ int r82xx_set_gain(struct r82xx_priv *priv, int set_manual_gain, int gain)
   int rc;
   int i, total_gain = 0;
   uint8_t mix_index = 0, lna_index = 0;
+  uint32_t ringFrequency;
   uint8_t data[4];
 
   if (set_manual_gain) {
@@ -1027,7 +1023,9 @@ int r82xx_set_gain(struct r82xx_priv *priv, int set_manual_gain, int gain)
   }
 
 
-  rc = setupRingOscillator(priv,12,48,0);
+  rc = r82xx_startRingOscillator(priv,lna_index,48,8,&ringFrequency);
+  fprintf(stderr,"N: %u\n",lna_index);
+  fprintf(stderr,"Ring oscillator frequency: %u\n",ringFrequency);
 
 
   return 0;
@@ -1395,15 +1393,15 @@ static int r82xx_gpio(struct r82xx_priv *priv, int enable)
 
 /**************************************************************************
 
-  Name: setupRingOscillator
+  Name: r82xx_startRingOscillator
 
   Purpose: The purpose of this function is to configure and start up the
   ring oscillator in an R82xx tuner device.
 
-  Calling Sequence: status = setupRingOscillator(priv,
-                                                 n_ring,
-                                                 out[utDivider,
-                                                 outputGain)
+  Calling Sequence: status = r82xx_startRingOscillator(priv,
+                                                       n_ring,
+                                                       out[utDivider,
+                                                       outputGain)
 
   Inputs:
 
@@ -1421,20 +1419,23 @@ static int r82xx_gpio(struct r82xx_priv *priv, int enable)
     ring oscillator output is amplified.  Valid values are
     {-5,0,3,8}.  The units are in decibels.
 
+    ringFrequencyPtr - A pointer to storage for the ring frequency.
+    The units are in Hz.
+
   Outputs:
 
     status - The status of the operation. A value of 0 implies success,
     and a value of -1 implies failure.
 
 **************************************************************************/
-static int setupRingOscillator(struct r82xx_priv *priv,
-                               uint8_t n_ring,
-                               uint8_t outputDivider,
-                               int outputGain)
+int r82xx_startRingOscillator(struct r82xx_priv *priv,
+                              uint8_t n_ring,
+                              uint8_t outputDivider,
+                              int outputGain,
+                              uint32_t *ringFrequencyPtr)
 {
   int rc;
   uint8_t ring_div_index;
-  uint32_t ring_freq;
   uint32_t ring_ref;
   uint8_t gainBits;
   static const uint8_t divBit21[] = {0,0,1,1,2,2,3,3};
@@ -1568,12 +1569,10 @@ static int setupRingOscillator(struct r82xx_priv *priv,
   // Turn off LNA.
   rc = r82xx_write_reg_mask(priv, 0x05, 0xa0, 0xff);
 
-  ring_freq = ((16 + n_ring) * 8) * ring_ref / outputDivider;
-
-  fprintf(stderr,"ring Oscillator Frequency: %u\n",ring_freq);
-  
+  *ringFrequencyPtr = ((16 + n_ring) * 8) * ring_ref / outputDivider;
+ 
   return (rc);
 
-} // setupRingOscillator
+} // r82xx_startRingOscillator
 
 
