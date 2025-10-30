@@ -2138,8 +2138,6 @@ int rtlsdr_startRingOscillator(rtlsdr_dev_t *dev,
 {
   int rc;
 
-  rc = 0;
-	
   switch (dev->tuner_type)
   {
     case RTLSDR_TUNER_R820T:
@@ -2155,6 +2153,7 @@ int rtlsdr_startRingOscillator(rtlsdr_dev_t *dev,
 
     default:
     {
+      fprintf(stderr,"Error: tuner does not have a ring oscillator.n");
       break;
     } // case
     
@@ -2169,17 +2168,18 @@ int rtlsdr_stopRingOscillator(rtlsdr_dev_t *dev)
 {
   int rc;
 
-  rc = 0;
-
   switch (dev->tuner_type)
   {
     case RTLSDR_TUNER_R820T:
     case RTLSDR_TUNER_R828D:
     {
+      rc =r82xx_stopRingOscillator(&dev->r82xx_p);
+      break;
     } // case
 
     default:
     {
+      fprintf(stderr,"Error: tuner does not have a ring oscillator.n");
       break;
     } // case
     

@@ -1575,4 +1575,46 @@ int r82xx_startRingOscillator(struct r82xx_priv *priv,
 
 } // r82xx_startRingOscillator
 
+/**************************************************************************
+
+  Name: r82xx_stopRingOscillator
+
+  Purpose: The purpose of this function is to stop the ring oscillator
+  in an R82xx tuner device.
+
+  Calling Sequence: status = r82xx_stopRingOscillator(priv)
+
+  Inputs:
+
+    priv - A pointer to a structure that represents device state.
+
+  Outputs:
+
+    status - The status of the operation. A value of 0 implies success,
+    and a value of -1 implies failure.
+
+**************************************************************************/
+int r82xx_stopRingOscillator(struct r82xx_priv *priv)
+{
+  int rc;
+
+  // Remove power from VCO PLL.
+  rc = r82xx_write_reg_mask(priv, 0x19, 0x00, 0x0c);
+
+  // RRemove remove power from ring PLL.
+  rc = r82xx_write_reg_mask(priv, 0x18, 0x00, 0x10);
+
+  // Turn off PLL reference clock.
+  rc = r82xx_write_reg_mask(priv, 0x0f, 0x08, 0x08);
+
+  // Select mixer input sources to  LNA.
+  rc = r82xx_write_reg_mask(priv, 0x1c, 0x00 , 0x02);
+
+  // Turn LNA on..
+  rc = r82xx_write_reg_mask(priv, 0x05, 0x83, 0xff);
+
+
+  return (rc);
+
+} // r82xx_stopRingOscillator
 

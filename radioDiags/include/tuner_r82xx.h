@@ -125,6 +125,6 @@ int r82xx_startRingOscillator(struct r82xx_priv *priv,
                               int outputGain,
                               uint32_t *ringFrequencyPtr);
 
-int r82xx_stopRingOscillator(void);
+int r82xx_stopRingOscillator(struct r82xx_priv *priv);
 
 #endif
