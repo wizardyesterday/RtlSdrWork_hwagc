@@ -114,6 +114,8 @@ static void cmdGetFscanInfo(char *bufferPtr);
 static void cmdGetSweeperInfo(char *bufferPtr);
 static void cmdSelectV4BlogRadio(char *bufferPtr);
 static void cmdSelectNormalRadio(char *bufferPtr);
+static void cmdStartRingOscillator(char *bufferPtr);
+static void cmdStopRingOscillator(char *bufferPtr);
 static void cmdExitSystem(char *bufferPtr);
 static void cmdHelp(void);
 
@@ -173,6 +175,8 @@ static const commandEntry commandTable[] =
   {"get","sweeperinfo",cmdGetSweeperInfo}, // get sweeperinfo
   {"select","vfourblogradio",cmdSelectV4BlogRadio}, // select vfourblogradio
   {"select","normalradio",cmdSelectNormalRadio}, // select normalradio
+  {"start","ringoscillator",cmdStartRingOscillator}, // start ringoscillator
+  {"stop","ringoscillator",cmdStopRingOscillator}, // start ringoscillator
   {"exit","system",cmdExitSystem},       // exit system
   {"\0","\0",0}                          // last entry in command table
 };
@@ -1861,6 +1865,103 @@ static void cmdStopFrequencySweep(char *bufferPtr)
   return;
 
 } // cmdStopFrequencySweep
+
+/*****************************************************************************
+
+  Name: cmdStartRingOscillator
+
+  Purpose: The purpose of this function is to set the ring oscillator
+  in the tuner.
+
+  The syntax for the corresponding command is the following:
+
+    "start ringoscillator vcoDivider outputDivider outputGain"
+
+  Calling Sequence: cmdStartRingOscillator(bufferPtr)
+
+  Inputs:
+
+    bufferPtr - A pointer to the command parameters.
+
+  Outputs:
+
+    None.
+
+*****************************************************************************/
+static void cmdStartRingOscillator(char *bufferPtr)
+{
+  bool success;
+  uint32_t vcoDivider;
+  uint32_t outputDivider;
+  int outputGain;
+  uint32_t frequency;
+
+  success = true;
+
+  // Retrieve value
+  sscanf(bufferPtr,"%d %d %d",&vcoDivider,&outputDivider,&outputGain);
+
+  success = diagUi_radioPtr->startRingOscillator(vcoDivider,
+                                                 outputDivider,
+                                                 outputGain,
+                                                 &frequency);
+
+  if (success)
+  {
+    nprintf(stderr,"Ring oscillator set to %uHz\n",frequency);
+  } // if
+  else
+  {
+    nprintf(stderr,"Error: Could not start the ring oscillator.\n");
+  } // else
+
+  return;
+
+} // cmdStartRingOscillator
+
+/*****************************************************************************
+
+  Name: cmdStopRingOscillator
+
+  Purpose: The purpose of this function is to set the ring oscillator
+  in the tuner.
+
+  The syntax for the corresponding command is the following:
+
+    "stop ringoscillator"
+
+  Calling Sequence: cmdStopRingOscillator(bufferPtr)
+
+  Inputs:
+
+    bufferPtr - A pointer to the command parameters.
+
+  Outputs:
+
+    None.
+
+*****************************************************************************/
+static void cmdStopRingOscillator(char *bufferPtr)
+{
+  bool success;
+
+  success = true;
+
+
+  success = diagUi_radioPtr->stopRingOscillator();
+ 
+  if (success)
+  {
+    nprintf(stderr,"Ring oscillator stopped\n");
+  } // if
+  else
+  {
+    nprintf(stderr,"Error: Could not stop the ring oscillator.\n");
+  } // else
+
+  return;
+
+} // cmdStopRingOscillator
 
 /*****************************************************************************
 

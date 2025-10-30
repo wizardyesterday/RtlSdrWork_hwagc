@@ -1022,12 +1022,6 @@ int r82xx_set_gain(struct r82xx_priv *priv, int set_manual_gain, int gain)
       return rc;
   }
 
-
-  rc = r82xx_startRingOscillator(priv,lna_index,48,8,&ringFrequency);
-  fprintf(stderr,"N: %u\n",lna_index);
-  fprintf(stderr,"Ring oscillator frequency: %u\n",ringFrequency);
-
-
   return 0;
 }
 
