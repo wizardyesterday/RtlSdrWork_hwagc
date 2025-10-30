@@ -1613,7 +1613,6 @@ int r82xx_stopRingOscillator(struct r82xx_priv *priv)
   // Turn LNA on..
   rc = r82xx_write_reg_mask(priv, 0x05, 0x83, 0xff);
 
-
   return (rc);
 
 } // r82xx_stopRingOscillator

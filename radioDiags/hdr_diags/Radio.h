@@ -76,6 +76,16 @@ class Radio
   bool isAgcEnabled(void);
   void displayAgcInternalInformation(void);
 
+  // Ring oscillator support.
+  bool startRingOscillator(uint8_t n_ring,
+                           uint8_t outputDivider,
+                           int outputGain,
+                           uint32_t *ringFrequencyPtr);
+
+  bool stopRingOscillator(void);
+
+
+
   void displayInternalInformation(void);
 
   private:

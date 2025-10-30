@@ -1784,7 +1784,7 @@ bool Radio::disableAgc(void)
 
   Outputs:
 
-    success - A flag that indicates whether or not the AGC is enabled.
+    status - A flag that indicates whether or not the AGC is enabled.
     A value of true indicates that the AGC is enabled, and a value of
     false indicates that the AGC is disabled.
 
@@ -1795,6 +1795,125 @@ bool Radio::isAgcEnabled(void)
   return (agc_isEnabled());
 
 } // isAgcEnabled
+
+/**************************************************************************
+
+  Name: startRingOscillator
+
+  Purpose: The purpose of this function is to configure and start up the
+  ring oscillator in the tuner device.
+
+  Calling Sequence: succes = startRingOscillator(n_ring,
+                                                 out[utDivider,
+                                                 outputGain)
+
+  Inputs:
+
+   n_ring - The divider value for the ring oscillator phase locked
+    loop. Valid values are 0 through 15, although, it is reecommended
+    to use values between 9 and 14, inclusive.
+
+    outputDivider - A parameter that is used to divide the ring
+    oscillator VCO frequency down to a lower value.  Valid values
+    are {4,6,8,12,16,24,32,48}.
+
+    outputGain - A parameter that specifies the gain for which the
+    ring oscillator output is amplified.  Valid values are
+    {-5,0,3,8}.  The units are in decibels.
+
+    ringFrequencyPtr - A pointer to storage for the ring frequency.
+    The units are in Hz.
+
+  Outputs:
+
+    success - A flag that indicates whether or not the operation was
+    successful.  A value of true indicates that the operation was
+    successful, and a value of false indicates that the operation
+    failed.
+**************************************************************************/
+bool Radio::startRingOscillator(uint8_t n_ring,
+                           uint8_t outputDivider,
+                           int outputGain,
+                           uint32_t *ringFrequencyPtr)
+{
+  bool success;
+  int error;
+
+  // Acquire the I/O subsystem lock.
+  pthread_mutex_lock(&ioSubsystemLock);
+
+  // Default to failure.
+  success = false;
+
+  if (devicePtr != 0)
+  {
+    // Start he ring oscillator in the tuner.
+    error = rtlsdr_startRingOscillator((rtlsdr_dev_t *)devicePtr,
+                                       n_ring,
+                                       outputDivider,
+                                       outputGain,
+                                       ringFrequencyPtr);
+
+    if (error == 0)
+    {
+     success = true;
+    } // if
+  } // if
+
+  // Release the I/O subsystem lock.
+  pthread_mutex_unlock(&ioSubsystemLock);
+
+  return (success);
+
+} // startRingOscillator
+
+/**************************************************************************
+
+  Name: r82xx_stopRingOscillator
+
+  Purpose: The purpose of this function is to stop the ring oscillator
+  in the tuner device.
+
+  Calling Sequence: status = r82xx_stopRingOscillator()
+
+  Inputs:
+
+    None.
+
+  Outputs:
+
+    status - The status of the operation. A value of 0 implies success,
+    and a value of -1 implies failure.
+
+**************************************************************************/
+bool Radio::stopRingOscillator(void)
+{
+  bool success;
+  int error;
+
+  // Acquire the I/O subsystem lock.
+  pthread_mutex_lock(&ioSubsystemLock);
+
+  // Default to failure.
+  success = false;
+
+  if (devicePtr != 0)
+  {
+    // Stop he ring oscillator in the tuner.
+    error = rtlsdr_stopRingOscillator((rtlsdr_dev_t *)devicePtr);
+
+    if (error == 0)
+    {
+     success = true;
+    } // if
+  } // if
+
+  // Release the I/O subsystem lock.
+  pthread_mutex_unlock(&ioSubsystemLock);
+
+  return (success);
+
+} // stopRingOscillator
 
 /**************************************************************************
 
