@@ -175,8 +175,9 @@ static const commandEntry commandTable[] =
   {"get","sweeperinfo",cmdGetSweeperInfo}, // get sweeperinfo
   {"select","vfourblogradio",cmdSelectV4BlogRadio}, // select vfourblogradio
   {"select","normalradio",cmdSelectNormalRadio}, // select normalradio
-  {"start","ringoscillator",cmdStartRingOscillator}, // start ringoscillator
-  {"stop","ringoscillator",cmdStopRingOscillator}, // start ringoscillator
+  {"start","ringoscillator",cmdStartRingOscillator}, 
+    // start ringoscillator vcodivider outputdivider outputgain
+  {"stop","ringoscillator",cmdStopRingOscillator}, // stop ringoscillator
   {"exit","system",cmdExitSystem},       // exit system
   {"\0","\0",0}                          // last entry in command table
 };
@@ -1901,8 +1902,8 @@ static void cmdStartRingOscillator(char *bufferPtr)
   // Retrieve value
   sscanf(bufferPtr,"%d %d %d",&vcoDivider,&outputDivider,&outputGain);
 
-  success = diagUi_radioPtr->startRingOscillator(vcoDivider,
-                                                 outputDivider,
+  success = diagUi_radioPtr->startRingOscillator((uint8_t)vcoDivider,
+                                                 (uint8_t)outputDivider,
                                                  outputGain,
                                                  &frequency);
 
@@ -2233,6 +2234,11 @@ static void cmdHelp(void)
   nprintf(stderr,"get agcinfo\n");
   nprintf(stderr,"select vfourblogradio\n");
   nprintf(stderr,"select normalradio\n");
+  nprintf(stderr,
+          "start ringoscillator <vcoDivider> <outputDivider> <outputGain>\n");
+
+  nprintf(stderr,"stop ringoscillator\n");
+
   nprintf(stderr,"exit system\n");
   nprintf(stderr,"help\n");
   nprintf(stderr,"Type <^B><enter> key sequence to repeat last command\n");
