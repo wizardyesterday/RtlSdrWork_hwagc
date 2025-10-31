@@ -108,9 +108,11 @@ stop frequencysweep
 get radioinfo
 get fscaninfo
 get sweeperinfo
+get agcinfo
 select vfourblogradio
 select normalradio
-get agcinfo
+start ringoscillator <vcoDivider> <outputDivider> <outputGain>
+stop ringoscillator
 exit system
 help
 Type <^B><enter> key sequence to repeat last command
