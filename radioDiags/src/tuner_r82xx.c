@@ -1604,8 +1604,8 @@ int r82xx_stopRingOscillator(struct r82xx_priv *priv)
   // Select mixer input sources to  LNA.
   rc = r82xx_write_reg_mask(priv, 0x1c, 0x00 , 0x02);
 
-  // Turn LNA on..
-  rc = r82xx_write_reg_mask(priv, 0x05, 0x83, 0xff);
+  // Turn LNA on, autogain mode, cable1 and air inputs enabled.
+  rc = r82xx_write_reg_mask(priv, 0x05, 0xE3, 0xff);
 
   return (rc);
 
