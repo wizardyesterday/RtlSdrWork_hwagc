@@ -1539,7 +1539,8 @@ int r82xx_startRingOscillator(struct r82xx_priv *priv,
   ring_ref = 14400000;
 
   // Apply max power to VCO PLL.
-  rc = r82xx_write_reg_mask(priv, 0x19, 0x0c, 0x0c);
+  // Already powered up by default.
+  // rc = r82xx_write_reg_mask(priv, 0x19, 0x0c, 0x0c);
 
   // Apply power to ring PLL.
   rc = r82xx_write_reg_mask(priv, 0x18, 0x10, 0x10);
@@ -1560,8 +1561,8 @@ int r82xx_startRingOscillator(struct r82xx_priv *priv,
   // Select mixer input sources to  ring oscillator.
   rc = r82xx_write_reg_mask(priv, 0x1c, 0x02 , 0x02);
 
-  // Set LNA gain to minimum.
-  rc = r82xx_write_reg_mask(priv, 0x05, 0x00, 0x0f);
+  // Power down the LNA by setting to minimum power.
+  rc = r82xx_write_reg_mask(priv, 0x05, 0x07, 0x07);
 
   *ringFrequencyPtr = ((16 + n_ring) * 8) * ring_ref / outputDivider;
  
@@ -1593,7 +1594,8 @@ int r82xx_stopRingOscillator(struct r82xx_priv *priv)
   int rc;
 
   // Remove power from VCO PLL.
-  rc = r82xx_write_reg_mask(priv, 0x19, 0x00, 0x0c);
+  // Leave at default value of powered up.
+  // rc = r82xx_write_reg_mask(priv, 0x19, 0x00, 0x0c);
 
   // RRemove remove power from ring PLL.
   rc = r82xx_write_reg_mask(priv, 0x18, 0x00, 0x10);
@@ -1603,6 +1605,9 @@ int r82xx_stopRingOscillator(struct r82xx_priv *priv)
 
   // Select mixer input sources to  LNA.
   rc = r82xx_write_reg_mask(priv, 0x1c, 0x00 , 0x02);
+
+  // Restore power to yhe LNA using the default setting.
+  rc = r82xx_write_reg_mask(priv, 0x05, (r82xx_init_array[2] & 0x07), 0x07);
 
   return (rc);
 
