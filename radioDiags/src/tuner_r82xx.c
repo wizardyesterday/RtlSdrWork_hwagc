@@ -1554,7 +1554,7 @@ int r82xx_startRingOscillator(struct r82xx_priv *priv,
   rc = r82xx_write_reg_mask(priv, 0x18, divBit0[ring_div_index], 0x20);
   rc = r82xx_write_reg_mask(priv, 0x19, divBit21[ring_div_index], 0x03);
 
-  // Set utput gain in dB.
+  // Set Output gain in dB.
   rc = r82xx_write_reg_mask(priv, 0x1f, gainBits, 0x03);
 
   // Select mixer input sources to  ring oscillator.
