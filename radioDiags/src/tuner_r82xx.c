@@ -1560,8 +1560,8 @@ int r82xx_startRingOscillator(struct r82xx_priv *priv,
   // Select mixer input sources to  ring oscillator.
   rc = r82xx_write_reg_mask(priv, 0x1c, 0x02 , 0x02);
 
-  // Turn off LNA.
-  rc = r82xx_write_reg_mask(priv, 0x05, 0xa0, 0xff);
+  // Set LNA gain to minimum.
+  rc = r82xx_write_reg_mask(priv, 0x05, 0x00, 0x0f);
 
   *ringFrequencyPtr = ((16 + n_ring) * 8) * ring_ref / outputDivider;
  
@@ -1603,9 +1603,6 @@ int r82xx_stopRingOscillator(struct r82xx_priv *priv)
 
   // Select mixer input sources to  LNA.
   rc = r82xx_write_reg_mask(priv, 0x1c, 0x00 , 0x02);
-
-  // Turn LNA on, autogain mode, cable1 and air inputs enabled.
-  rc = r82xx_write_reg_mask(priv, 0x05, 0xE3, 0xff);
 
   return (rc);
 
