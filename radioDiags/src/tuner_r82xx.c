@@ -1540,7 +1540,6 @@ int r82xx_startRingOscillator(struct r82xx_priv *priv,
 
   // Apply max power to VCO PLL.
   // Already powered up by default.
-  // rc = r82xx_write_reg_mask(priv, 0x19, 0x0c, 0x0c);
 
   // Apply power to ring PLL.
   rc = r82xx_write_reg_mask(priv, 0x18, 0x10, 0x10);
@@ -1594,7 +1593,7 @@ int r82xx_stopRingOscillator(struct r82xx_priv *priv)
   // Leave at default value of powered up.
   // rc = r82xx_write_reg_mask(priv, 0x19, 0x00, 0x0c);
 
-  // RRemove remove power from ring PLL.
+  // Remove remove power from ring PLL.
   rc = r82xx_write_reg_mask(priv, 0x18, 0x00, 0x10);
 
   // Turn off PLL reference clock.
