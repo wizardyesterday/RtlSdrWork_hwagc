@@ -1561,9 +1561,6 @@ int r82xx_startRingOscillator(struct r82xx_priv *priv,
   // Select mixer input sources to  ring oscillator.
   rc = r82xx_write_reg_mask(priv, 0x1c, 0x02 , 0x02);
 
-  // Power down the LNA by setting to minimum power.
-  rc = r82xx_write_reg_mask(priv, 0x05, 0x07, 0x07);
-
   *ringFrequencyPtr = ((16 + n_ring) * 8) * ring_ref / outputDivider;
  
   return (rc);
@@ -1605,9 +1602,6 @@ int r82xx_stopRingOscillator(struct r82xx_priv *priv)
 
   // Select mixer input sources to  LNA.
   rc = r82xx_write_reg_mask(priv, 0x1c, 0x00 , 0x02);
-
-  // Restore power to yhe LNA using the default setting.
-  rc = r82xx_write_reg_mask(priv, 0x05, (r82xx_init_array[2] & 0x07), 0x07);
 
   return (rc);
 
