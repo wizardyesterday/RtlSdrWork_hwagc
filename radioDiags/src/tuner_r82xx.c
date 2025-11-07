@@ -1411,7 +1411,11 @@ static int r82xx_gpio(struct r82xx_priv *priv, int enable)
 
     outputGain - A parameter that specifies the gain for which the
     ring oscillator output is amplified.  Valid values are
-    {-8,-5,-3,0}.  The units are in decibels.
+    {-8,-5,-3,0} decibels. This maps to two-bit register fields values
+    of {2, 0, 1, 3} for bits[1:0] of R31 in the tuner, respectively.
+    I was able to determin thie mapping by presenting the output IQ data
+    to my spectrum analyzer (n my signal analyzer app) while the tuner
+    ring oscillator was active at a frequency of 57.6MHz.
 
     ringFrequencyPtr - A pointer to storage for the ring frequency.
     The units are in Hz.
@@ -1500,11 +1504,15 @@ int r82xx_startRingOscillator(struct r82xx_priv *priv,
 
   } // switch
 
+  //_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+  // Watch those mappings! Thes mappings have been determined, by
+  // experiment, to be correct.
+  //_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
   switch (outputGain)
   {
     case -8:
     {
-      gainBits = 3;
+      gainBits = 2;
       break;
     } // case
 
@@ -1516,20 +1524,20 @@ int r82xx_startRingOscillator(struct r82xx_priv *priv,
 
     case -3:
     {
-      gainBits = 2;
+      gainBits = 1;
       break;
     } // case
 
     case 0:
     {
-      gainBits = 1;
+      gainBits = 3;
       break;
     } // case
 
     default:
     {
-      // Default to -5dB.
-      gainBits = 0;
+      // Default to -8dB.
+      gainBits = 2;
       break;
     } // case
 
