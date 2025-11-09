@@ -2143,10 +2143,16 @@ int rtlsdr_startRingOscillator(rtlsdr_dev_t *dev,
     case RTLSDR_TUNER_R820T:
     case RTLSDR_TUNER_R828D:
     {
+      // Enable the I2C repeater.
+      rtlsdr_set_i2c_repeater(dev, 1);
+
+      // Setup and start the ring oscillator.
       rc = r82xx_startRingOscillator(&dev->r82xx_p,
                                      n_ring,outputDivider,
                                      outputGain,
                                      ringFrequencyPtr);
+      // Disable the I2C repeater.
+      rtlsdr_set_i2c_repeater(dev, 0);
       break;
 
     } // case
@@ -2173,7 +2179,14 @@ int rtlsdr_stopRingOscillator(rtlsdr_dev_t *dev)
     case RTLSDR_TUNER_R820T:
     case RTLSDR_TUNER_R828D:
     {
+      // Enable the I2C repeater.
+      rtlsdr_set_i2c_repeater(dev, 1);
+
+      // We're done with the ring oscillator.
       rc =r82xx_stopRingOscillator(&dev->r82xx_p);
+
+      // Disable the I2C repeater.
+      rtlsdr_set_i2c_repeater(dev, 0);
       break;
     } // case
 
@@ -2184,6 +2197,7 @@ int rtlsdr_stopRingOscillator(rtlsdr_dev_t *dev)
     } // case
     
   } // switch
+
 
   return (rc);
 
