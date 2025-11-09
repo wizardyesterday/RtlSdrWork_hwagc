@@ -1819,7 +1819,7 @@ bool Radio::isAgcEnabled(void)
 
     outputGain - A parameter that specifies the gain for which the
     ring oscillator output is amplified.  Valid values are
-    {-5,0,3,8}.  The units are in decibels.
+    {-8,-5,-3,0}.  The units are in decibels.
 
     ringFrequencyPtr - A pointer to storage for the ring frequency.
     The units are in Hz.
@@ -1869,12 +1869,12 @@ bool Radio::startRingOscillator(uint8_t n_ring,
 
 /**************************************************************************
 
-  Name: r82xx_stopRingOscillator
+  Name: stopRingOscillator
 
   Purpose: The purpose of this function is to stop the ring oscillator
   in the tuner device.
 
-  Calling Sequence: status = r82xx_stopRingOscillator()
+  Calling Sequence: status = stopRingOscillator()
 
   Inputs:
 
