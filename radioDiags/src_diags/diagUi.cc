@@ -1876,7 +1876,7 @@ static void cmdStopFrequencySweep(char *bufferPtr)
 
   The syntax for the corresponding command is the following:
 
-    "start ringoscillator vcoDivider outputDivider outputGain"
+    "start ringoscillator n_ring outputDivider outputGain"
 
   Calling Sequence: cmdStartRingOscillator(bufferPtr)
 
@@ -1892,7 +1892,7 @@ static void cmdStopFrequencySweep(char *bufferPtr)
 static void cmdStartRingOscillator(char *bufferPtr)
 {
   bool success;
-  uint32_t vcoDivider;
+  uint32_t n_ring;
   uint32_t outputDivider;
   int outputGain;
   uint32_t frequency;
@@ -1900,9 +1900,9 @@ static void cmdStartRingOscillator(char *bufferPtr)
   success = true;
 
   // Retrieve value
-  sscanf(bufferPtr,"%d %d %d",&vcoDivider,&outputDivider,&outputGain);
+  sscanf(bufferPtr,"%d %d %d",&n_ring,&outputDivider,&outputGain);
 
-  success = diagUi_radioPtr->startRingOscillator((uint8_t)vcoDivider,
+  success = diagUi_radioPtr->startRingOscillator((uint8_t)n_ring,
                                                  (uint8_t)outputDivider,
                                                  outputGain,
                                                  &frequency);
@@ -2235,7 +2235,7 @@ static void cmdHelp(void)
   nprintf(stderr,"select vfourblogradio\n");
   nprintf(stderr,"select normalradio\n");
   nprintf(stderr,
-          "start ringoscillator <vcoDivider> <outputDivider> <outputGain>\n");
+          "start ringoscillator <n_ring> <outputDivider> <outputGain>\n");
 
   nprintf(stderr,"stop ringoscillator\n");
 
