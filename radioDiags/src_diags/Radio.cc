@@ -370,8 +370,6 @@ bool Radio::setupReceiver(void)
   receiveIfGainInDb = 24;
 #endif
 
-  tableValue = 0x80;
-
   //_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
   // this table contains a mapping from 0-255 to
   // 0x80-0x7f. This is needed to for mapping a gain
@@ -387,10 +385,23 @@ bool Radio::setupReceiver(void)
   // index. Then, the gain index will be used to
   // look up the register setting from this table.
   //_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-  for (i = 0; i < 256; i++)
+
+  // Values for lower half of the table.
+  tableValue = 0x80;
+
+  for (i = 0; i < 128; i++)
   {
     analogAgcTable[i] = tableValue++;
   } // for
+
+  // Values for lower half of the table.
+  tableValue = 0x00;
+
+  for (i = 128; i < 256; i++)
+  {
+    analogAgcTable[i] = tableValue++;
+  } // for
+
   //_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 
   // Other subsystems need to know this.
