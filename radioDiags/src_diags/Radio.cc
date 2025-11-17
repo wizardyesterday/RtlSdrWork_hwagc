@@ -1,5 +1,5 @@
 //**********************************************************************
-// file name: Radi
+// file name: Radio.cc
 //**********************************************************************
 
 #include <stdio.h>
@@ -29,6 +29,28 @@ static char *agcDisplayBufferPtr;
 
 static uint8_t analogAgcTable[256];
 
+/*****************************************************************************
+
+  Name: setGainCallback 
+
+  Purpose: The purpose of this function is to provide a mechanism
+  for the AGC function to set the gain of the IF amplifier. This
+  callback allows a X language function to invoke C++ code, thus
+  decoupling to circumvent language restrictions. 
+
+  Calling Sequence: setGainCallback(gainInDb)
+
+  Inputs:
+
+    gainInDb - the gain, in decibels for which to set the IF
+    amplifier to.
+
+
+  Outputs:
+
+    None.
+
+*****************************************************************************/
 static void setGainCallback(uint32_t gainIndB)
 {
   int status;
@@ -39,6 +61,26 @@ static void setGainCallback(uint32_t gainIndB)
 
 } // setGainCallback
 
+/*****************************************************************************
+
+  Name: getGainCallback 
+
+  Purpose: The purpose of this function is to provide a mechanism
+  for the AGC function to set the gain of the IF amplifier. This
+  callback allows a X language function to invoke C++ code, thus
+  decoupling to circumvent language restrictions. 
+
+  Calling Sequence: gainIndBgetGainCallback()
+
+  Inputs:
+
+    None.
+
+  Outputs:
+
+    gainInDb - the current gain, in decibels of the IF amplifier.
+
+*****************************************************************************/
 static uint32_t getGainCallback(void)
 {
 
@@ -384,6 +426,12 @@ bool Radio::setupReceiver(void)
   // table that maps gain in decibels to gain
   // index. Then, the gain index will be used to
   // look up the register setting from this table.
+  // Notice how I use two separate loops to fill
+  // in the lookup table. Although, I could have
+  // Used one loop and took advantage of the fact
+  // that a uint8_t increments modulo 256, it
+  // might not be obvious to all programmers.
+  // Instead, I used a more straightforward approach.
   //_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 
   // Values for lower half of the table.
@@ -394,7 +442,7 @@ bool Radio::setupReceiver(void)
     analogAgcTable[i] = tableValue++;
   } // for
 
-  // Values for lower half of the table.
+  // Values for upper half of the table.
   tableValue = 0x00;
 
   for (i = 128; i < 256; i++)
