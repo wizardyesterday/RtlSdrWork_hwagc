@@ -35,7 +35,7 @@ static uint8_t analogAgcTable[256];
 
   Purpose: The purpose of this function is to provide a mechanism
   for the AGC function to set the gain of the IF amplifier. This
-  callback allows a X language function to invoke C++ code, thus
+  callback allows a C language function to invoke C++ code, thus
   decoupling to circumvent language restrictions. 
 
   Calling Sequence: setGainCallback(gainInDb)
@@ -55,6 +55,7 @@ static void setGainCallback(uint32_t gainIndB)
 {
   int status;
 
+  // Set the IF gain via the Radio API.
   status = myRadioPtr->setReceiveIfGainInDb(0,gainIndB);
 
   return;
@@ -66,8 +67,8 @@ static void setGainCallback(uint32_t gainIndB)
   Name: getGainCallback 
 
   Purpose: The purpose of this function is to provide a mechanism
-  for the AGC function to set the gain of the IF amplifier. This
-  callback allows a X language function to invoke C++ code, thus
+  for the AGC function to ehe gain of the current IF amplifier gain.
+  This callback allows a C language function to invoke C++ code, thus
   decoupling to circumvent language restrictions. 
 
   Calling Sequence: gainIndBgetGainCallback()
@@ -84,6 +85,7 @@ static void setGainCallback(uint32_t gainIndB)
 static uint32_t getGainCallback(void)
 {
 
+  // Retrieve from e global variable for speed.
   return (radio_adjustableReceiveGainInDb);
 
 } // getGainCallback
