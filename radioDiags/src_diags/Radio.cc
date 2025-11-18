@@ -67,7 +67,7 @@ static void setGainCallback(uint32_t gainIndB)
   Name: getGainCallback 
 
   Purpose: The purpose of this function is to provide a mechanism
-  for the AGC function to retrieve the the current IF amplifier gain.
+  for the AGC function to retrieve the current IF amplifier gain.
   This callback allows a C language function to invoke C++ code, thus
   decoupling to circumvent language restrictions. 
 
